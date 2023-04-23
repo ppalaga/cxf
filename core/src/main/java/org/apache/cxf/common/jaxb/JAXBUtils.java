@@ -1150,6 +1150,7 @@ public final class JAXBUtils {
     }
 
     private static Object createEscapeHandler(Class<?> cls, String simpleClassName) {
+        System.out.println("==== Creating " + simpleClassName);
         try {
             String postFix = getPostfix(cls);
             if (postFix == null) {
@@ -1167,6 +1168,7 @@ public final class JAXBUtils {
                                         new Class[] {handlerInterface},
                                         new EscapeHandlerInvocationHandler(targetHandler));
         } catch (Exception e) {
+            e.printStackTrace();
             if ("NoEscapeHandler".equals(simpleClassName)) {
                 //this class doesn't exist in JAXB 2.2 so expected
                 LOG.log(Level.FINER, "Failed to create " + simpleClassName);

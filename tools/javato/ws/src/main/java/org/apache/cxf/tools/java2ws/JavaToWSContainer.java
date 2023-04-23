@@ -103,7 +103,7 @@ public class JavaToWSContainer extends AbstractCXFToolContainer {
             } else {
                 err.println("Use the verbose setting to show the stacktrace of this error");
             }
-
+            ex.printStackTrace();
             throw new ToolException(ex.getMessage(), ex.getCause());
         } finally {
             tearDown();
