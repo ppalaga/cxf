@@ -487,6 +487,10 @@ public class RMManager {
                     context.put(key, message.getContextualProperty(key));
                 }
             }
+            final String addr = (String)message.get(Message.ENDPOINT_ADDRESS);
+            if (addr != null) {
+                context.put(Message.ENDPOINT_ADDRESS, addr);
+            }
 
             CreateSequenceResponseType createResponse =
                 proxy.createSequence(acksTo, relatesTo, isServer, protocol, exchange, context);
