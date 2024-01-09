@@ -2,6 +2,7 @@
 
     <inInt xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
     <inInteger xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+    <smallInt xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">1026</smallInt>
     <inString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
 
 </ser:NullTestOperationRequest>

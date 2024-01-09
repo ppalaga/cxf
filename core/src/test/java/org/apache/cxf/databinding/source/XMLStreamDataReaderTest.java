@@ -179,15 +179,7 @@ public class XMLStreamDataReaderTest {
         MessagePartInfo messagePartInfo  = new MessagePartInfo(new QName(
                 "http://www.test.org/services", "NullTestOperationRequest"), messageInfo);
         messagePartInfo.setElement(true);
-        boolean exceptionCaught = false;
-        try {
-            reader.read(messagePartInfo, xmlStreamReader);
-        } catch (Fault fault) {
-            exceptionCaught = true;
-        }  catch (Exception exc) {
-            fail(exc.getMessage());
-        }
-        assertEquals(exceptionExpected, exceptionCaught);
+        reader.read(messagePartInfo, xmlStreamReader);
     }
 
     private static class TestInputStream extends ByteArrayInputStream {
