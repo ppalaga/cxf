@@ -1,7 +1,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns="http://server.hw.demo/nillable"
-           targetNamespace="http://server.hw.demo/nillable"
-           elementFormDefault="qualified" attributeFormDefault="qualified">
+           targetNamespace="http://server.hw.demo/nillable">
   <xs:element name="nillableParent">
     <xs:complexType>
       <xs:sequence>

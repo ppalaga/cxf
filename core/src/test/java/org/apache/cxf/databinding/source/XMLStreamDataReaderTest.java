@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -44,6 +45,7 @@ import org.xml.sax.SAXException;
 import com.ctc.wstx.msv.W3CSchemaFactory;
 
 import org.apache.cxf.endpoint.Endpoint;
+import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.ExchangeImpl;
@@ -124,25 +126,23 @@ public class XMLStreamDataReaderTest {
 
     @Test
     public void testNillableInt() throws Exception {
-        validate("resources/nillable.xsd", "resources/nillableInt.xml");
+
+        final String xmlDocument;
+        try (InputStream in = getClass().getResourceAsStream("resources/nillableInt.xml")) {
+            xmlDocument = IOUtils.toString(in);
+        }
+
+        Object o = validate("resources/nillable.xsd", xmlDocument);
+        System.out.println("=== o " + o);
+
+        System.out.println("== " + xmlDocument.replace("xsi:nil=\"true\"", "xsi:nil=\"false\""));
+        o = validate("resources/nillable.xsd", xmlDocument.replace("xsi:nil=\"true\"", "xsi:nil=\"false\""));
+        System.out.println("=== o " + o);
+
     }
 
-
-    private Object validate(String schemaPath, String xmlPath) throws ParserConfigurationException, IOException, SAXException, XMLStreamException, FactoryConfigurationError {
-
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+    private Object validate(String schemaPath, String xmlDocument) throws ParserConfigurationException, IOException, SAXException, XMLStreamException, FactoryConfigurationError {
         URL schemaURI = getClass().getResource(schemaPath);
-        Document wsdl;
-        try (InputStream schemaInputStream = schemaURI.openStream()) {
-            wsdl = documentBuilder.parse(schemaInputStream);
-        }
-        String wsdlSystemId = schemaURI.toExternalForm();
-        DOMSource source = new DOMSource(wsdl);
-        source.setSystemId(wsdlSystemId);
-        source.setSystemId(wsdlSystemId);
-
         XMLValidationSchema schemaw3c =
                 W3CSchemaFactory.newInstance(XMLValidationSchema.SCHEMA_ID_W3C_SCHEMA).createSchema(schemaURI);
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -152,7 +152,7 @@ public class XMLStreamDataReaderTest {
         reader.setSchema(schema);
 
 
-        InputStream testIS = getClass().getResourceAsStream(xmlPath);
+        InputStream testIS = new ByteArrayInputStream(xmlDocument.getBytes(StandardCharsets.UTF_8));
         Message msg = new MessageImpl();
         Exchange exchange = new ExchangeImpl();
 
