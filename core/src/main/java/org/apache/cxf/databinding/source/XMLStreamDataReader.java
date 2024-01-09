@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
@@ -40,6 +39,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.xml.sax.SAXException;
+
+import com.ctc.wstx.stax.WstxInputFactory;
 
 import jakarta.activation.DataSource;
 import org.apache.cxf.common.classloader.ClassLoaderUtils;
@@ -225,45 +226,44 @@ public class XMLStreamDataReader implements DataReader<XMLStreamReader> {
         }
 
         WoodstoxValidationImpl impl = new WoodstoxValidationImpl();
-        XMLStreamWriter nullWriter = null;
-        if (impl.canValidate()) {
-            nullWriter = StaxUtils.createXMLStreamWriter(new NUllOutputStream());
-            impl.setupValidation(nullWriter, message.getExchange().getEndpoint(),
-                                 message.getExchange().getService().getServiceInfos().get(0));
-        }
-        //check if the impl can still validate after the setup, possible issue loading schemas or similar
         if (impl.canValidate()) {
             //Can use the MSV libs and woodstox to handle the schema validation during
             //parsing and processing.   Much faster and single traversal
+            final XMLStreamReader reader = StaxUtils.createXMLInputFactory(true).createXMLStreamReader(ds);
             //filter xop node
-            XMLStreamReader reader = StaxUtils.createXMLStreamReader(ds);
-            XMLStreamReader filteredReader =
-                StaxUtils.createFilteredReader(reader,
-                                               new StaxStreamFilter(new QName[] {XOP}));
-
-            StaxUtils.copy(filteredReader, nullWriter);
-        } else {
-            //MSV not available, use a slower method of cloning the data, replace the xop's, validate
-            LOG.fine("NO_MSV_AVAILABLE");
-            Element newElement = rootElement;
-            if (DOMUtils.hasElementWithName(rootElement, "http://www.w3.org/2004/08/xop/include", "Include")) {
-                newElement = (Element)rootElement.cloneNode(true);
-                List<Element> elems = DOMUtils.findAllElementsByTagNameNS(newElement,
-                                                                          "http://www.w3.org/2004/08/xop/include",
-                                                                          "Include");
-                for (Element include : elems) {
-                    Node parentNode = include.getParentNode();
-                    parentNode.removeChild(include);
-                    String cid = DOMUtils.getAttribute(include, "href");
-                    //set the fake base64Binary to validate instead of reading the attachment from message
-                    parentNode.setTextContent(jakarta.xml.bind.DatatypeConverter.printBase64Binary(cid.getBytes()));
+            final XMLStreamReader filteredReader =
+                    StaxUtils.createFilteredReader(reader, StaxStreamFilter.excludeElement(XOP));
+            impl.setupValidation(filteredReader, message.getExchange().getEndpoint(),
+                    message.getExchange().getService().getServiceInfos().get(0));
+            //check if the impl can still validate after the setup, possible issue loading schemas or similar
+            if (impl.canValidate()) {
+                while (filteredReader.hasNext()) {
+                    filteredReader.next();
                 }
+                return rootElement;
             }
-            try {
-                schema.newValidator().validate(new DOMSource(newElement));
-            } catch (SAXException e) {
-                throw new XMLStreamException(e.getMessage(), e);
+        }
+
+        //MSV not available, use a slower method of cloning the data, replace the xop's, validate
+        LOG.fine("NO_MSV_AVAILABLE");
+        Element newElement = rootElement;
+        if (DOMUtils.hasElementWithName(rootElement, "http://www.w3.org/2004/08/xop/include", "Include")) {
+            newElement = (Element)rootElement.cloneNode(true);
+            List<Element> elems = DOMUtils.findAllElementsByTagNameNS(newElement,
+                                                                      "http://www.w3.org/2004/08/xop/include",
+                                                                      "Include");
+            for (Element include : elems) {
+                Node parentNode = include.getParentNode();
+                parentNode.removeChild(include);
+                String cid = DOMUtils.getAttribute(include, "href");
+                //set the fake base64Binary to validate instead of reading the attachment from message
+                parentNode.setTextContent(jakarta.xml.bind.DatatypeConverter.printBase64Binary(cid.getBytes()));
             }
+        }
+        try {
+            schema.newValidator().validate(new DOMSource(newElement));
+        } catch (SAXException e) {
+            throw new XMLStreamException(e.getMessage(), e);
         }
         return rootElement;
     }

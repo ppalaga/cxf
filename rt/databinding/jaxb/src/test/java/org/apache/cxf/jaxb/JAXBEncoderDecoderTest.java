@@ -31,6 +31,7 @@ import java.util.Map;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
+import javax.xml.stream.StreamFilter;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
@@ -351,7 +352,7 @@ public class JAXBEncoderDecoderTest {
         XMLStreamReader reader = factory.createXMLStreamReader(is);
 
         QName[] tags = {SOAP_ENV, SOAP_BODY};
-        StaxStreamFilter filter = new StaxStreamFilter(tags);
+        StreamFilter filter = StaxStreamFilter.excludeElements(tags);
         FixNamespacesXMLStreamReader filteredReader = new FixNamespacesXMLStreamReader(
                 factory.createFilteredReader(reader, filter));
 

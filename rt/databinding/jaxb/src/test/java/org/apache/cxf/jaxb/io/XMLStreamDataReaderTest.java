@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.StreamFilter;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
@@ -153,12 +154,12 @@ public class XMLStreamDataReaderTest {
     public void testReadRPC() throws Exception {
         JAXBDataBinding db = getDataBinding(MyComplexStruct.class);
 
-        QName[] tags = {new QName("http://apache.org/hello_world_rpclit", "sendReceiveData")};
+        QName excludedElement = new QName("http://apache.org/hello_world_rpclit", "sendReceiveData");
 
         reader = getTestReader("../resources/greetMeRpcLitReq.xml");
         assertNotNull(reader);
 
-        XMLStreamReader localReader = getTestFilteredReader(reader, tags);
+        XMLStreamReader localReader = factory.createFilteredReader(reader, StaxStreamFilter.excludeElement(excludedElement));
 
         DataReader<XMLStreamReader> dr = db.createReader(XMLStreamReader.class);
         assertNotNull(dr);
@@ -199,11 +200,6 @@ public class XMLStreamDataReaderTest {
     private JAXBDataBinding getDataBinding(Class<?>... clz) throws Exception {
         JAXBContext ctx = JAXBContext.newInstance(clz);
         return new JAXBDataBinding(ctx);
-    }
-
-    private XMLStreamReader getTestFilteredReader(XMLStreamReader r, QName[] q) throws Exception {
-        StaxStreamFilter filter = new StaxStreamFilter(q);
-        return factory.createFilteredReader(r, filter);
     }
 
     private XMLStreamReader getTestReader(String resource) throws Exception {

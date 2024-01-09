@@ -20,14 +20,19 @@
 package org.apache.cxf.staxutils;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.StreamFilter;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class StaxStreamFilterTest {
     public static final QName  SOAP_ENV =
@@ -37,7 +42,7 @@ public class StaxStreamFilterTest {
 
     @Test
     public void testFilter() throws Exception {
-        StaxStreamFilter filter = new StaxStreamFilter(new QName[]{SOAP_ENV, SOAP_BODY});
+        StreamFilter filter = StaxStreamFilter.excludeElements(new QName[]{SOAP_ENV, SOAP_BODY});
         String soapMessage = "./resources/sayHiRpcLiteralReq.xml";
         XMLStreamReader reader = StaxUtils.createXMLStreamReader(getTestStream(soapMessage));
         reader = StaxUtils.createFilteredReader(reader, filter);
@@ -51,8 +56,29 @@ public class StaxStreamFilterTest {
     }
 
     @Test
+    public void testFilterSingle() throws Exception {
+        final QName bannedQName = new QName("http://apache.org/hello_world_rpclit", "sayHi");
+        StreamFilter filter = StaxStreamFilter.excludeElements(bannedQName);
+        String soapMessage = "./resources/sayHiRpcLiteralReq.xml";
+        XMLStreamReader reader = StaxUtils.createXMLStreamReader(getTestStream(soapMessage));
+        reader = StaxUtils.createFilteredReader(reader, filter);
+
+        List<QName> collectedQNames = new ArrayList<>();
+        DepthXMLStreamReader dr = new DepthXMLStreamReader(reader);
+        while (dr.hasNext()) {
+            dr.next();
+            if (dr.isStartElement()) {
+                QName name = dr.getName();
+                assertNotEquals(name, bannedQName);
+                collectedQNames.add(name);
+            }
+        }
+        assertEquals(Arrays.asList(SOAP_ENV, SOAP_BODY), collectedQNames);
+    }
+
+    @Test
     public void testFilterRPC() throws Exception {
-        StaxStreamFilter filter = new StaxStreamFilter(new QName[]{SOAP_ENV, SOAP_BODY});
+        StreamFilter filter = StaxStreamFilter.excludeElements(new QName[]{SOAP_ENV, SOAP_BODY});
         String soapMessage = "./resources/greetMeRpcLitReq.xml";
         XMLStreamReader reader = StaxUtils.createXMLStreamReader(getTestStream(soapMessage));
         reader = StaxUtils.createFilteredReader(reader, filter);
@@ -84,6 +110,34 @@ public class StaxStreamFilterTest {
         assertEquals(new QName("http://apache.org/hello_world_rpclit/types", "elem2"), dr.getName());
     }
 
+    @Test
+    public void testFilterRPCSingle() throws Exception {
+        QName bannedQName = new QName("http://apache.org/hello_world_rpclit/types", "elem1");
+        StreamFilter filter = StaxStreamFilter.excludeElement(bannedQName);
+        String soapMessage = "./resources/greetMeRpcLitReq.xml";
+        XMLStreamReader reader = StaxUtils.createXMLStreamReader(getTestStream(soapMessage));
+        reader = StaxUtils.createFilteredReader(reader, filter);
+
+        List<QName> collectedQNames = new ArrayList<>();
+        DepthXMLStreamReader dr = new DepthXMLStreamReader(reader);
+        while (dr.hasNext()) {
+            dr.next();
+            if (dr.isStartElement()) {
+                QName name = dr.getName();
+                assertNotEquals(name, bannedQName);
+                collectedQNames.add(name);
+            }
+        }
+        assertEquals(Arrays.asList(
+                SOAP_ENV,
+                SOAP_BODY,
+                new QName("http://apache.org/hello_world_rpclit", "sendReceiveData"),
+                new QName("in"),
+                new QName("http://apache.org/hello_world_rpclit/types", "elem2"),
+                new QName("http://apache.org/hello_world_rpclit/types", "elem3")),
+                collectedQNames);
+
+    }
     private InputStream getTestStream(String file) {
         return getClass().getResourceAsStream(file);
     }

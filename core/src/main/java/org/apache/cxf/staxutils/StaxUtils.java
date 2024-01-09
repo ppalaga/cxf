@@ -182,7 +182,7 @@ public final class StaxUtils {
         } else {
             ALLOW_INSECURE_PARSER_VAL = false;
         }
-        
+
         String autoCloseInputSource = SystemPropertyAction.getPropertyOrNull(AUTO_CLOSE_INPUT_SOURCE_PROP);
         if (!StringUtils.isEmpty(autoCloseInputSource)) {
             AUTO_CLOSE_INPUT_SOURCE = "1".equals(autoCloseInputSource) || Boolean.parseBoolean(autoCloseInputSource);
@@ -1670,7 +1670,7 @@ public final class StaxUtils {
             if (src.getEncoding() == null) {
                 final StreamSource ss = new StreamSource(is, sysId);
                 ss.setPublicId(pubId);
-                
+
                 final XMLStreamReader xmlStreamReader = createXMLStreamReader(ss);
                 if (AUTO_CLOSE_INPUT_SOURCE) {
                     return new AutoCloseableXMLStreamReader(xmlStreamReader, is);
@@ -1678,7 +1678,7 @@ public final class StaxUtils {
                     return xmlStreamReader;
                 }
             }
-            
+
             return new AutoCloseableXMLStreamReader(createXMLStreamReader(is, src.getEncoding()), is);
         } else if (src.getCharacterStream() != null) {
             final Reader reader = src.getCharacterStream();
@@ -2218,5 +2218,5 @@ public final class StaxUtils {
         WoodstoxHelper.setProperty(reader, p, v);
     }
 
-    
+
 }
