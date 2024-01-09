@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
@@ -229,15 +230,23 @@ public class XMLStreamDataReader implements DataReader<XMLStreamReader> {
         if (impl.canValidate()) {
             //Can use the MSV libs and woodstox to handle the schema validation during
             //parsing and processing.   Much faster and single traversal
-            final XMLStreamReader reader = StaxUtils.createXMLInputFactory(true).createXMLStreamReader(ds);
+            XMLInputFactory xmlInputFactory = StaxUtils.createXMLInputFactory(true);
+            final XMLStreamReader reader = xmlInputFactory.createXMLStreamReader(ds);
             //filter xop node
             final XMLStreamReader filteredReader =
-                    StaxUtils.createFilteredReader(reader, StaxStreamFilter.excludeElement(XOP));
+                    xmlInputFactory.createFilteredReader(reader, StaxStreamFilter.excludeElement(XOP));
             impl.setupValidation(filteredReader, message.getExchange().getEndpoint(),
                     message.getExchange().getService().getServiceInfos().get(0));
             //check if the impl can still validate after the setup, possible issue loading schemas or similar
             if (impl.canValidate()) {
                 while (filteredReader.hasNext()) {
+                    if (filteredReader.isStartElement()) {
+                        System.out.println("<"+ filteredReader.getName() +" nil="+ filteredReader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil") +">");
+                    } else if (filteredReader.isCharacters()) {
+                        System.out.println(filteredReader.getText());
+                    } else if (filteredReader.isEndElement()) {
+                        System.out.println("</"+ filteredReader.getName() +">");
+                    }
                     filteredReader.next();
                 }
                 return rootElement;

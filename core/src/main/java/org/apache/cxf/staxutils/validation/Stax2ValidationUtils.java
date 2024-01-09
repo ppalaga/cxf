@@ -129,7 +129,7 @@ class Stax2ValidationUtils {
                         Fault.FAULT_CODE_CLIENT);
             }
         });
-        reader2.validateAgainst(vs);
+        assert reader2.validateAgainst(vs) != null;
         return true;
     }
 

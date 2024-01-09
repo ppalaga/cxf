@@ -135,9 +135,9 @@ public class XMLStreamDataReaderTest {
         Object o = validate("resources/nillable.xsd", xmlDocument);
         System.out.println("=== o " + o);
 
-        System.out.println("== " + xmlDocument.replace("xsi:nil=\"true\"", "xsi:nil=\"false\""));
-        o = validate("resources/nillable.xsd", xmlDocument.replace("xsi:nil=\"true\"", "xsi:nil=\"false\""));
-        System.out.println("=== o " + o);
+//        System.out.println("== " + xmlDocument.replace("xsi:nil=\"true\"", "xsi:nil=\"false\""));
+//        o = validate("resources/nillable.xsd", xmlDocument.replace("xsi:nil=\"true\"", "xsi:nil=\"false\""));
+//        System.out.println("=== o " + o);
 
     }
 

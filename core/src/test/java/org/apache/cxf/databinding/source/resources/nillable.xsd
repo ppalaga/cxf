@@ -6,8 +6,17 @@
       <xs:sequence>
         <xs:element name="nillableDateTime" type="xs:dateTime" nillable="true" minOccurs="0"/>
         <xs:element name="nillableInt" type="xs:int" nillable="true" minOccurs="0"/>
+        <xs:element nillable="true" name="smallInt" type="smallIntType" maxOccurs="1" minOccurs="0" />
         <xs:element name="nillableString" type="xs:string" nillable="true"  minOccurs="0"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+
+    <xs:simpleType name="smallIntType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0" />
+            <xs:maxInclusive value="1024" />
+        </xs:restriction>
+    </xs:simpleType>
+
 </xs:schema>
