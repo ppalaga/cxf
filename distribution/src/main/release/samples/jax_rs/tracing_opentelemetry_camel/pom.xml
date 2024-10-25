@@ -25,12 +25,12 @@
     <parent>
         <groupId>org.apache.cxf.samples</groupId>
         <artifactId>cxf-samples</artifactId>
-        <version>4.0.5</version>
+        <version>4.0.5.redhat-00001</version>
         <relativePath>../..</relativePath>
     </parent>
     
     <properties>
-        <cxf.version>${project.version}</cxf.version>
+        <cxf.version>4.0.5.redhat-00001</cxf.version>
     </properties>
     
     <profiles>

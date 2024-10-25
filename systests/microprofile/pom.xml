@@ -21,7 +21,7 @@
     <parent>
         <artifactId>cxf-parent</artifactId>
         <groupId>org.apache.cxf</groupId>
-        <version>4.0.5.fuse-SNAPSHOT</version>
+        <version>4.0.5.fuse-redhat-00012</version>
         <relativePath>../../parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -130,13 +130,13 @@
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-rs-mp-client</artifactId>
-                <version>${project.version}</version>
+                <version>4.0.5.fuse-redhat-00012</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-rs-extension-providers</artifactId>
-                <version>${project.version}</version>
+                <version>4.0.5.fuse-redhat-00012</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

@@ -26,10 +26,10 @@
     <parent>
         <groupId>org.apache.cxf.samples</groupId>
         <artifactId>cxf-samples</artifactId>
-        <version>4.0.5</version>
+        <version>4.0.5.redhat-00001</version>
     </parent>
     <properties>
-        <cxf.version>${project.version}</cxf.version>
+        <cxf.version>4.0.5.redhat-00001</cxf.version>
         <wsdl.location>${basedir}/wsdl/hello_world_async.wsdl</wsdl.location>
     </properties>
     <build>
@@ -37,7 +37,7 @@
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-codegen-plugin</artifactId>
-                <version>4.0.5.fuse-SNAPSHOT</version>
+                <version>4.0.5.fuse-redhat-00011</version>
                 <executions>
                     <execution>
                         <id>generate-sources</id>
@@ -127,17 +127,17 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>4.0.5.fuse-SNAPSHOT</version>
+            <version>4.0.5.fuse-redhat-00012</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
-            <version>4.0.5.fuse-SNAPSHOT</version>
+            <version>4.0.5.fuse-redhat-00012</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http-hc</artifactId>
-            <version>4.0.5.fuse-SNAPSHOT</version>
+            <version>4.0.5.fuse-redhat-00012</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -149,7 +149,7 @@
             <!-- Not needed if deploying to a Servlet 3 based container or non-jetty container -->
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http-undertow</artifactId>
-            <version>4.0.5.fuse-SNAPSHOT</version>
+            <version>4.0.5.fuse-redhat-00012</version>
         </dependency>
     </dependencies>
 </project>

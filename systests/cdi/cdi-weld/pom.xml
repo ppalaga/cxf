@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.cxf.systests</groupId>
         <artifactId>cxf-systests-cdi</artifactId>
-        <version>4.0.5.fuse-SNAPSHOT</version>
+        <version>4.0.5.fuse-redhat-00012</version>
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -121,7 +121,7 @@
         <dependency>
             <groupId>org.apache.cxf.systests</groupId>
             <artifactId>cxf-systests-cdi-base</artifactId>
-            <version>${project.version}</version>
+            <version>4.0.5.fuse-redhat-00012</version>
         </dependency>
     </dependencies>
 </project>

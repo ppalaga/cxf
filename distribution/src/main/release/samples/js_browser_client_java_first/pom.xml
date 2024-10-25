@@ -25,10 +25,10 @@
     <parent>
         <groupId>org.apache.cxf.samples</groupId>
         <artifactId>cxf-samples</artifactId>
-        <version>4.0.5</version>
+        <version>4.0.5.redhat-00001</version>
     </parent>
     <properties>
-        <cxf.version>${project.version}</cxf.version>
+        <cxf.version>4.0.5.redhat-00001</cxf.version>
     </properties>
     <profiles>
         <profile>
@@ -59,22 +59,22 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-javascript</artifactId>
-            <version>4.0.5.fuse-SNAPSHOT</version>
+            <version>4.0.5.fuse-redhat-00012</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>4.0.5.fuse-SNAPSHOT</version>
+            <version>4.0.5.fuse-redhat-00012</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
-            <version>4.0.5.fuse-SNAPSHOT</version>
+            <version>4.0.5.fuse-redhat-00012</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http-undertow</artifactId>
-            <version>4.0.5.fuse-SNAPSHOT</version>
+            <version>4.0.5.fuse-redhat-00012</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
