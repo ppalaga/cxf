@@ -267,11 +267,11 @@ public class JAXBDataBinding extends AbstractInterceptorProvidingDataBinding
     public Object getEscapeHandler() {
         return escapeHandler;
     }
-    
+
     public void setEscapeHandler(Object handler) {
         escapeHandler = handler;
     }
-    
+
     public void applyEscapeHandler(boolean escape, Consumer<Object> consumer) {
         if (escape) {
             consumer.accept(escapeHandler);
@@ -279,8 +279,8 @@ public class JAXBDataBinding extends AbstractInterceptorProvidingDataBinding
             consumer.accept(noEscapeHandler);
         }
     }
-    
-    
+
+
     @SuppressWarnings("unchecked")
     public <T> DataWriter<T> createWriter(Class<T> c) {
 
@@ -351,6 +351,8 @@ public class JAXBDataBinding extends AbstractInterceptorProvidingDataBinding
             }
 
         }
+
+        contextClasses.stream().forEach(cc -> System.out.println("contextClass " + cc + "@" + cc.getClassLoader()));
 
         String tns = getNamespaceToUse(service);
         final CachedContextAndSchemas cachedContextAndSchemas;
