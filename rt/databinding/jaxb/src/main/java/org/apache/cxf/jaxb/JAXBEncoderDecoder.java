@@ -683,6 +683,11 @@ public final class JAXBEncoderDecoder {
                                     MessagePartInfo part,
                                     boolean unwrap) {
         Class<?> clazz = part != null ? part.getTypeClass() : null;
+
+
+        System.out.println("===== wrapper clz " + clazz.getName());
+        System.out.println("===== wrapper cl " + clazz.getClassLoader());
+
         if (clazz != null && Exception.class.isAssignableFrom(clazz)
             && Boolean.TRUE.equals(part.getProperty(JAXBDataBinding.class.getName() + ".CUSTOM_EXCEPTION"))) {
             return unmarshallException(u, source, part);

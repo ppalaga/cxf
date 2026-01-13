@@ -176,6 +176,9 @@ public abstract class AbstractInvoker implements Invoker {
                                                                   m,
                                                                   Arrays.asList(paramArray)});
         }
+        System.out.println("===== param clz " + paramArray[0].getClass().getName());
+        System.out.println("===== param cl " + paramArray[0].getClass().getClassLoader());
+        System.out.println("===== m cl " + m.getDeclaringClass().getClassLoader());
         return m.invoke(serviceObject, paramArray);
     }
 
